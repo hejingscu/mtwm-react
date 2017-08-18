@@ -12,7 +12,7 @@ class ShopList extends Component {
         {
           shopList.map((item,key)=>{
             return (
-              <Link to={'/order'} key={key} className="item-shop">
+              <Link to={'/shop/detail/' + item._id} key={key} className="item-shop">
                   <div className="item-inner">
                     <div className="img"><img src={item.icon} alt=""/></div>
                     <div className="content">

@@ -1,4 +1,5 @@
 import React from 'react'
+import Footbar from './common/footbar'
 
 
 class Mine extends React.Component{
@@ -11,6 +12,7 @@ class Mine extends React.Component{
             <div style={{color: '#fff'}}>
             <div>999999999999999</div>
             <p>00000000000000000</p>
+            <Footbar></Footbar>
           </div>
         )
     }

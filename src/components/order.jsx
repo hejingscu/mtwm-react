@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Footbar from './common/footbar'
 
 class Test extends React.Component{
   constructor(props) {
@@ -11,6 +11,7 @@ class Test extends React.Component{
             <div style={{color: '#fff'}}>
             <div>222</div>
             <p>test</p>
+            <Footbar></Footbar>
           </div>
         )
     }

@@ -1,10 +1,13 @@
 import React,{Component} from 'react'
 import tools from '../../tools'
+import * as actions from 'src/actions/index'
+import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 
 class SearchOption extends Component {
   constructor(props){
     super(props)
-    this.state = {shopDropdown: false, fixedTopHeight: 0,timer: ''}
+    this.state = {shopDropdown: false, fixedTopHeight: 0,timer: '', fixedTop: '', curIndex: this.props.pageIndexOptionPos.curIndex}
   }
   //区分不同类型选择
   switchTab = (index, option) =>{
@@ -28,28 +31,44 @@ class SearchOption extends Component {
       default:
         break;
     }
+    if(index==1||index==2||(index==0&&option)){
+      this.props.actions.setPageIndexOptionPos({curIndex: index})
+    }
   }
   componentDidMount(){
-    setTimeout( () => {
-      if(document.getElementById("blockShopTitle")){
-        this.setState({
-          fixedTopHeight: document.getElementById("blockShopTitle").offsetTop,  //筛选条件开始置顶的位置
-          //监测是否滑动到指定位置
-          timer: setInterval( () => {
-            let prevValue = this.state.fixedTop
-            if(window.scrollY < this.state.fixedTopHeight){
-              this.setState({fixedTop: false})
-            }else{
-              this.setState({fixedTop: true})
-            }
-            //经过指定位置时传递事件
-            if(prevValue !== this.state.fixedTop){
-              this.props.refreshSearchPosition(this.state.fixedTop)
-            }
-          },20)
-        })
+    //等待接口数据请求到之后才定义事件监听，针对网速过慢的情况
+    let isGetShopList = setInterval(()=>{
+      if(this.props.pageIndexData.shopList.length > 0){
+        clearInterval(isGetShopList)
+        let mainFun = (h) => {
+          if(document.getElementById("blockShopTitle")){
+            this.setState({
+              fixedTopHeight: h,  //筛选条件开始置顶的位置
+              timer: setInterval( () => {
+                let prevValue = this.state.fixedTop
+                if(window.scrollY < this.state.fixedTopHeight){
+                  this.setState({fixedTop: false})
+                }else{
+                  this.setState({fixedTop: true})
+                }
+                //经过指定位置时传递事件
+                if(prevValue !== this.state.fixedTop){
+                  this.props.refreshSearchPosition(this.state.fixedTop)
+                  this.props.actions.setPageIndexOptionPos({num: h, fixedTop: this.state.fixedTop})
+                }
+              },20)
+            })
+          }
+        }
+        if(!this.props.pageIndexOptionPos.num){
+          setTimeout(()=>{
+            mainFun(document.getElementById("blockShopTitle").offsetTop)
+          },200)
+        }else{
+          mainFun(this.props.pageIndexOptionPos.num)
+        }
       }
-    },1000)
+    },30)
   }
   componentWillUnmount(){
     clearInterval(this.state.timer)
@@ -85,4 +104,11 @@ class SearchOption extends Component {
   }
 }
 
-export default SearchOption
+const mapDispatchToProps = (dispatch)=> {
+    return {
+        actions: bindActionCreators(actions, dispatch)
+    }
+}
+export default connect((state)=> {
+    return state
+}, mapDispatchToProps)(SearchOption);

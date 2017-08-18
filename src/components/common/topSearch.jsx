@@ -6,21 +6,19 @@ class TopSearch extends Component {
     this.state = {searchItemFixed: false, timer: ''}
   }
   componentDidMount() {
-    setTimeout( () => {
-      if(document.getElementById("category")){
-        this.setState({
-          fixedTopHeight: document.getElementById("category").offsetTop,  //筛选条件开始置顶的位置
-          //监测是否滑动到指定位置
-          timer: setInterval( () => {
-            if(window.scrollY < this.state.fixedTopHeight){
-              this.setState({searchItemFixed: false})
-            }else{
-              this.setState({searchItemFixed: true})
-            }
-          },20)
-        })
-      }
-    },1000)
+    if(document.getElementById("category")){
+      this.setState({
+        fixedTopHeight: 111,  //筛选条件开始置顶的位置
+        //监测是否滑动到指定位置
+        timer: setInterval( () => {
+          if(window.scrollY < this.state.fixedTopHeight){
+            this.setState({searchItemFixed: false})
+          }else{
+            this.setState({searchItemFixed: true})
+          }
+        },20)
+      })
+    }
   }
   componentWillUnmount() {
     clearInterval(this.state.timer)
