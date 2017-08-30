@@ -24,3 +24,6 @@ export const getCategory = params => axios.get(baseUrl + 'category', params);
 
 //获取店铺信息
 export const getShopGoods = params => axios.get(baseUrl + 'shop/manage/' + params.id);
+
+//获取用户基本信息
+export const getUserProfile = () => axios.get(baseUrl + 'user/profile');

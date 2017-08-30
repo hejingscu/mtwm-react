@@ -16,24 +16,12 @@ export const pageIndexOptionPos = (state = {}, action)=> {
     }
 }
 
-
-export const curShopGoods = (state = {goods: []}, action)=> {
+export const userProfile = (state = {}, action)=> {
     switch (action.type) {
-        case "getCurShopGoods":
+        case "setUserProfile":
             return Object.assign({}, state, action.data);
         default :
             return state;
     }
 }
-
-export const shopCartData = (state = {list: []}, action)=> {
-    switch (action.type) {
-        case "getShopCartData":
-            return Object.assign({}, state, action.data);
-        default :
-            return state;
-    }
-}
-
-
 

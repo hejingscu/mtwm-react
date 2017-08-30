@@ -17,7 +17,6 @@ class ShopDetail extends React.Component{
     }
     componentDidMount(){
       this.getData()
-      //this.props.actions.getCurShopGoods({id: this.props.params.id})
     }
     //获取商品数据和购物车数据
     getData(){
@@ -39,11 +38,11 @@ class ShopDetail extends React.Component{
       this.setState({shopCartData: {list: shopCartData, totalAmount: totalAmount}});
     }
     //加减商品
-    changeGoodsNum(item,type){
-      //this.props.actions.changeGoodsNum(item,type,this.props.params.id)
+    changeGoodsNum(goodsObj,type){
       let totalBuyCart = JSON.parse(window.localStorage.getItem('shopCart'))//所有店铺的购物车数据
+      let shopId = this.props.params.id
       let shopCartData = { list: totalBuyCart[shopId] || [], totalAmount : 0}//当前店铺的购物车初始化数据
-      getState().curShopGoods.goods.forEach(item=>{
+      this.state.curShopGoods.goods.forEach(item=>{
         if(item.id == goodsObj.id){
           let cartObj,cartObjIndex //购物车中正在操作的商品的对象
           //在购物车中获取增减商品的索引
@@ -77,24 +76,22 @@ class ShopDetail extends React.Component{
       //将变化的数据存入localStorage
       totalBuyCart[shopId] = shopCartData.list
       window.localStorage.setItem('shopCart', JSON.stringify(totalBuyCart))
-      dispatch({type: "getCurShopGoods", data: getState().curShopGoods})
-      dispatch({type: "getShopCartData", data: shopCartData});
+      this.setState({shopCartData: shopCartData});
     }
     //显示隐藏购物车
     showCart(){
-      if(this.props.shopCartData.list.length > 0){
+      if(this.state.shopCartData.list.length > 0){
         this.setState({showCart: !this.state.showCart})
       }
     }
     render () {
       let { tabIndex,curShopGoods,shopCartData } = this.state
-      //let { curShopGoods,shopCartData } = this.props
         return (
           <div className="page-shop-detail">
             <div className="shop-info">
               <div className="shop-icon"> </div>
               <div className="text-info">
-                <p>SUPERMAN炒饭</p><span onClick={()=>{hashHistory.goBack()}}>会返回</span>
+                <p>SUPERMAN炒饭</p>
                 <p>{curShopGoods.discount}</p>
               </div>
             </div>
@@ -118,10 +115,10 @@ class ShopDetail extends React.Component{
                                 <span>{item.name}</span><br/>
                               </div>
                               <div className="item-price"><span>{item.price}</span></div>
-                              <div className="item-num" style={{fontSsize: '.4rem'}}>
-                                {item.count > 0 ? <span onClick={this.changeGoodsNum.bind(this,item,'decrease')}>-</span> : ''}
+                              <div className="item-num hj-num-change" style={{fontSsize: '.4rem'}}>
+                                {item.count > 0 ? <span className="btn" onClick={this.changeGoodsNum.bind(this,item,'decrease')}>-</span> : ''}
                                 {item.count > 0 ? <span style={{margin: '0 0.3rem'}}>{item.count}</span> : ''}
-                                <span onClick={this.changeGoodsNum.bind(this,item,'add')}>+</span>
+                                <span className="btn" onClick={this.changeGoodsNum.bind(this,item,'add')}>+</span>
                               </div>
                             </div>
                           </div>

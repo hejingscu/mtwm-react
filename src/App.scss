@@ -382,6 +382,7 @@ input[type="number"] {
     background: #eee;
     opacity: .9;
     bottom: 0;
+    z-index: 1000;
     .item {
         flex: 1;
         text-align: center;
@@ -443,8 +444,14 @@ input[type="number"] {
     }
 }
 
-.block-shop {
+// .block-shop {
+//     margin-bottom: .8rem;
+// }
+.no-more {
     margin-bottom: .8rem;
+    text-align: center;
+    line-height: .8rem;
+    background: #fff;
 }
 
 //shopList组件
@@ -654,7 +661,7 @@ input[type="number"] {
     }
     .scroll-tab {
         background: #f4f4f4;
-        min-height: 70vh;
+        min-height: 80vh;
         width: 20%;
         .item-tab {
             line-height: 1rem;
@@ -754,5 +761,20 @@ input[type="number"] {
                 line-height: .5rem;
             }
         }
+    }
+}
+
+.hj-num-change {
+    .btn {
+        display: inline-block;
+        width: .4rem;
+        height: .4rem;
+        background: #f5da55;
+        text-align: center;
+        line-height: .38rem;
+        border-radius: 100%;
+        font-size: .3rem;
+        color: #333;
+        font-weight: bold;
     }
 }
