@@ -41,52 +41,40 @@ class SearchOption extends Component {
     }
     if(index==1||index==2||(index===0&&option)||(index===0&&!this.state.fixedTop)){
       this.props.actions.setPageIndexOptionPos({curIndex: index})
-      tools.scrollTo("searchOptionPosition")
+      tools.scrollTo("blockShopTitle")
+    }
+  }
+  test = () => {
+
+    this.setState({fixedTopHeight: document.getElementById(this.props.posId).offsetTop})
+    let prevValue = this.state.fixedTop
+    if(window.scrollY < this.state.fixedTopHeight){
+      this.setState({fixedTop: false})
+    }else{
+      this.setState({fixedTop: true})
+    }
+    console.log(window.scrollY, this.state.fixedTopHeight)
+    //经过指定位置时传递事件
+    if(prevValue !== this.state.fixedTop){
+      this.props.refreshSearchPosition(this.state.fixedTop)
+      this.props.actions.setPageIndexOptionPos({num: this.state.fixedTopHeight, fixedTop: this.state.fixedTop})
+    }
+    if(this.props.posId == 'topDiv'){
+      $("#searchOptionMain").css("top","0")
     }
   }
   componentDidMount(){
-    //等待接口数据请求到之后才定义事件监听，针对网速过慢的情况
-    let isGetShopList = setInterval(()=>{
-      if(this.props.pageIndexData.shopList.length > 0){
-        clearInterval(isGetShopList)
-        let mainFun = (h) => {
-          if(document.getElementById("blockShopTitle")){
-            this.setState({
-              fixedTopHeight: h,  //筛选条件开始置顶的位置
-              timer: setInterval( () => {
-                let prevValue = this.state.fixedTop
-                if(window.scrollY < this.state.fixedTopHeight){
-                  this.setState({fixedTop: false})
-                }else{
-                  this.setState({fixedTop: true})
-                }
-                //经过指定位置时传递事件
-                if(prevValue !== this.state.fixedTop){
-                  this.props.refreshSearchPosition(this.state.fixedTop)
-                  this.props.actions.setPageIndexOptionPos({num: h, fixedTop: this.state.fixedTop})
-                }
-              },20)
-            })
-          }
-        }
-        if(!this.props.pageIndexOptionPos.num){
-          setTimeout(()=>{
-            mainFun(document.getElementById("blockShopTitle").offsetTop)
-          },200)
-        }else{
-          mainFun(this.props.pageIndexOptionPos.num)
-        }
-      }
-    },30)
+    window.addEventListener('scroll', this.test);
   }
   componentWillUnmount(){
-    clearInterval(this.state.timer)
+    window.removeEventListener('scroll', this.test);
   }
   render() {
     let { zhpxMap,zhpxCurrnet } = this.state
     return (
       <section style={{position: 'relative'}} id="searchOption">
-        <div className={this.state.fixedTop ? "fixedTop" : "notFixedTop"}>
+        {this.state.fixedTop ? <div style={{height: '.7rem'}}></div> : ''}
+        <div className={this.state.fixedTop ? "fixedTop" : "notFixedTop"} id="searchOptionMain">
           <div className="block-option">
             <dic className={"item-option " + (this.state.curIndex === 0 ? "active" : "")} onClick={() => {this.switchTab(0)}}>{zhpxMap[zhpxCurrnet]}</dic>
             <dic className={"item-option " + (this.state.curIndex === 1 ? "active" : "")} onClick={() => {this.switchTab(1)}}>销量最高</dic>

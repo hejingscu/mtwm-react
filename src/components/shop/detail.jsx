@@ -84,6 +84,15 @@ class ShopDetail extends React.Component{
         this.setState({showCart: !this.state.showCart})
       }
     }
+    //提交订单
+    submitOrder(){
+      let { shopCartData } = this.state
+      //shopCartData.list = JSON.stringify(shopCartData.list)
+      console.log(shopCartData)
+      api.newOrder(shopCartData).then(res=>{
+
+      })
+    }
     render () {
       let { tabIndex,curShopGoods,shopCartData } = this.state
         return (
@@ -149,7 +158,7 @@ class ShopDetail extends React.Component{
                       <div className="total-price">
                         ￥{shopCartData.totalAmount}
                       </div>
-                      <div className={shopCartData.list.length <= 0 ? 'to-pay to-pay-empty' : 'to-pay to-pay-notEmpty'}>
+                      <div onClick={this.submitOrder.bind(this)} className={shopCartData.list.length <= 0 ? 'to-pay to-pay-empty' : 'to-pay to-pay-notEmpty'}>
                         去结算
                       </div>
                     </div>
