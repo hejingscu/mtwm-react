@@ -7,6 +7,15 @@ export const pageIndexData = (state = {shopList: [], bannerList: [], categoryLis
     }
 }
 
+export const typeShopListData = (state = {shopList: []}, action)=> {
+    switch (action.type) {
+        case "getTypeShopListData":
+            return Object.assign({}, state, action.data);
+        default :
+            return state;
+    }
+}
+
 export const pageIndexOptionPos = (state = {}, action)=> {
     switch (action.type) {
         case "setPageIndexOptionPos":

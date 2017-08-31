@@ -11,9 +11,7 @@ class Mine extends React.Component{
         this.state = {msg: '111', info: '222'}
     }
     componentDidMount(){
-      api.getUserProfile().then(res=>{
-        this.props.actions.setUserProfile(res.data)
-      })
+      api.getUserProfile().then(res=>{this.props.actions.setUserProfile(res.data)})
     }
     render () {
       let { userProfile } = this.props

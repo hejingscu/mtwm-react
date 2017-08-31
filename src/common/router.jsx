@@ -5,6 +5,7 @@ import Index from '../components/index'
 import Order from '../components/order'
 import Mine from '../components/mine'
 import Login from '../components/login'
+import PageShopList from '../components/shop/list'
 import ShopDetail from '../components/shop/detail'
 
 const routeLeave = (state) => {
@@ -30,6 +31,7 @@ const RouterConfig=(
             <Route path='/order' component={Order}></Route>
             <Route path='/mine' component={Mine}></Route>
             <Route path='/login' component={Login}></Route>
+            <Route path='/shop/list' component={PageShopList} onEnter={routeEnter} onLeave={routeLeave} keep={true}></Route>
             <Route path='/shop/detail/:id' component={ShopDetail}></Route>
         </Route>
     </Router>

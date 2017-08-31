@@ -10,13 +10,14 @@ import Swiper from 'swiper'
 import * as actions from 'src/actions/index'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import { hashHistory } from 'react-router'
 
 
 
 class Index extends React.Component{
   constructor(props) {
         super(props)
-        this.state = {noMore: false,searchOptionTop: false, pageParams: {pageIndex: 1, pageSize: 20}}
+        this.state = {noMore: false,searchOptionTop: false, pageParams: {pageIndex: 1, pageSize: 10}}
   }
   refreshSearchPosition = (flg) => {
     this.setState({searchOptionTop: flg})
@@ -32,11 +33,14 @@ class Index extends React.Component{
   getShop = (option) => {
     api.getShop(this.state.pageParams).then( (res) => {
       //this.setState({shopList: res.data})
-      //this.props.actions.updateShopList(res.data)
-      if(res.data.length < 1){
+      this.props.actions.updateIndexShopList(res.data)
+      if(res.data.length < this.state.pageParams.pageSize){
         this.setState({noMore: true})
       }
     })
+  }
+  toTypeShopList = (item) => {
+    hashHistory.push('/shop/list/' + item.name)
   }
   componentWillMount(){
 
@@ -103,7 +107,7 @@ class Index extends React.Component{
           {
             categoryList.map((item,key) => {
               return (
-                <div key={key} className="item-category">
+                <div key={key} className="item-category" onClick={() => {this.toTypeShopList(item)}}>
                   <div className="item-inner">
                     <img src={item.icon} alt="" height="100%"/>
                     <div>{item.name}</div>
@@ -114,8 +118,8 @@ class Index extends React.Component{
           }
         </div>
         <div id="blockShopTitle" className="text-center">附近商家</div>
-        <div id="searchOptionPosition" className={this.state.searchOptionTop ? 'blockShopFlgShow' : 'blockShopFlgHide'}></div>
-        <SearchOption ref="searchOption" getShop={this.getShop} refreshSearchPosition={this.refreshSearchPosition}></SearchOption>
+        {/* <div id="searchOptionPosition" className={this.state.searchOptionTop ? 'blockShopFlgShow' : 'blockShopFlgHide'}></div> */}
+        <SearchOption ref="searchOption" getShop={this.getShop} refreshSearchPosition={this.refreshSearchPosition} posId={"blockShopTitle"}></SearchOption>
         <ShopList shopList={shopList}></ShopList>
         {noMore ? <div className="no-more">没有更多了</div> : ''}
         <Footbar></Footbar>

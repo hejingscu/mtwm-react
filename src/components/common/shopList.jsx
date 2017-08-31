@@ -8,7 +8,7 @@ class ShopList extends Component {
   render() {
     let {shopList}=this.props;
     return (
-      <section className="block-shop">
+      <section className="block-shop" id="shopList">
         {
           shopList.map((item,key)=>{
             return (
