@@ -6,7 +6,7 @@ class ShopList extends Component {
     super(props)
   }
   render() {
-    let {shopList}=this.props;
+    let {shopList,nextPageLoading}=this.props;
     return (
       <section className="block-shop" id="shopList">
         {
@@ -28,7 +28,8 @@ class ShopList extends Component {
             )
           })
         }
-        </section>
+        {nextPageLoading ? <div className="c-999 text-center nextPageLoading"><img src={require('src/img/icon-loading.gif')} style={{height: "70%", width: "auto"}} alt=""/></div> : ''}
+      </section>
     )
   }
 }

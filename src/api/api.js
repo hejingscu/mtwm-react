@@ -24,7 +24,7 @@ export const getBanner = params => axios.get(baseUrl + 'banner', params);
 export const getCategory = params => axios.get(baseUrl + 'category', params);
 
 //获取店铺信息
-export const getShopGoods = params => axios.get(baseUrl + 'shop/manage/' + params.id);
+export const getShopInfo = params => axios.get(baseUrl + 'shop/manage/' + params.id);
 
 //下单
 export const newOrder = params => axios.post(baseUrl + 'order', params);

@@ -448,7 +448,7 @@ input[type="number"] {
 //     margin-bottom: .8rem;
 // }
 .no-more {
-    margin-bottom: .8rem;
+    //margin-bottom: .8rem;
     text-align: center;
     line-height: .8rem;
     background: #fff;
@@ -524,7 +524,7 @@ input[type="number"] {
     //元素置顶
     .fixedTop {
         position: fixed;
-        top: .84rem;
+        top: 0;
         z-index: 10000;
         width: 100%;
     }
@@ -551,7 +551,7 @@ input[type="number"] {
 
 //主页顶部搜索框组件
 .block-search {
-    position: fixed;
+    position: absolute;
     width: 100%;
     z-index: 200;
     height: .7rem;
@@ -614,6 +614,8 @@ input[type="number"] {
 //首页
 .pageIndex {
     background: #f4f4f4;
+    margin-bottom: .8rem;
+    position: relative;
     .blockShopFlgHide {
         height: .01rem;
     }
@@ -764,6 +766,13 @@ input[type="number"] {
     }
 }
 
+.page-order {
+    .item-order {
+        border: 1px solid #eee;
+        margin-bottom: .2rem;
+    }
+}
+
 .hj-num-change {
     .btn {
         display: inline-block;
@@ -777,4 +786,11 @@ input[type="number"] {
         color: #333;
         font-weight: bold;
     }
+}
+
+.nextPageLoading {
+    height: .3rem;
+    padding: .2rem 0;
+    background: #fff;
+    box-sizing: content-box;
 }

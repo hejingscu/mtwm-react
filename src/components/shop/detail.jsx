@@ -10,7 +10,7 @@ import { hashHistory } from 'react-router'
 class ShopDetail extends React.Component{
   constructor(props) {
         super(props)
-        this.state = {tabIndex: 0, showCart: false, curShopGoods: {discount: '', goods: []}, shopCartData: {list:[]}}
+        this.state = {mainData: {},tabIndex: 0, showCart: false, curShopGoods: {discount: '', goods: []}, shopCartData: {list:[]}}
     }
     changeTab(i){
       this.setState({tabIndex: i})
@@ -28,11 +28,12 @@ class ShopDetail extends React.Component{
         totalAmount += ( item.price * item.count )
       })
       //获取店铺的最新商品数据
-      api.getShopGoods({id: this.props.params.id}).then( res=> {
+      api.getShopInfo({id: this.props.params.id}).then( res=> {
         res.data.goods.forEach(item=>{
           item.count = 0
         })
-        res.data.goods = res.data.goods.concat(shopCartData).uniqueGoods()
+        //console.log(shopCartData)
+        res.data.goods = res.data.goods.concat(shopCartData).uniqueGoods('goodsId')
         this.setState({curShopGoods: res.data});
       })
       this.setState({shopCartData: {list: shopCartData, totalAmount: totalAmount}});
@@ -43,11 +44,11 @@ class ShopDetail extends React.Component{
       let shopId = this.props.params.id
       let shopCartData = { list: totalBuyCart[shopId] || [], totalAmount : 0}//当前店铺的购物车初始化数据
       this.state.curShopGoods.goods.forEach(item=>{
-        if(item.id == goodsObj.id){
+        if(item.goodsId == goodsObj.goodsId){
           let cartObj,cartObjIndex //购物车中正在操作的商品的对象
           //在购物车中获取增减商品的索引
           shopCartData.list.forEach((obj,index)=>{
-            if(obj.id == goodsObj.id){
+            if(obj.goodsId == goodsObj.goodsId){
               cartObj = obj
               cartObjIndex = index
             }
@@ -98,9 +99,9 @@ class ShopDetail extends React.Component{
         return (
           <div className="page-shop-detail">
             <div className="shop-info">
-              <div className="shop-icon"> </div>
+              <div className="shop-icon"><img src={curShopGoods.icon} width="100%" height="100%" alt=""/></div>
               <div className="text-info">
-                <p>SUPERMAN炒饭</p>
+                <p>{curShopGoods.name}</p>
                 <p>{curShopGoods.discount}</p>
               </div>
             </div>

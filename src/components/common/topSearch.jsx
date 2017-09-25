@@ -36,7 +36,7 @@ class TopSearch extends Component {
         }
         {
           this.state.searchItemFixed ?
-          <div className="item search w100 text-center" style={{background: '#fff'}}>
+          <div className="item search w100 text-center" style={{background: '#fff', position: 'fixed'}}>
             <div className="item-search item-search-full">
               <a href="javascript:;" className="c-999">麻辣香锅</a>
             </div>

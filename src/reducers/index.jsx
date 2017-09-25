@@ -34,3 +34,21 @@ export const userProfile = (state = {}, action)=> {
     }
 }
 
+
+export const noMoreFlgData = (state = {}, action)=> {
+    switch (action.type) {
+        case "saveIsNoMore":
+            return Object.assign({}, state, action.data);
+        default :
+            return state;
+    }
+}
+
+export const nextPageLoading = (state = "", action)=> {
+    switch (action.type) {
+        case "saveNextPageLoading":
+            return action.saveNextPageLoading;
+        default :
+            return state;
+    }
+}

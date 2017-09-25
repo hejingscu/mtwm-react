@@ -12,10 +12,13 @@ class SearchOption extends Component {
       fixedTopHeight: 0,
       timer: '',
       fixedTop: '',
-      curIndex: this.props.pageIndexOptionPos.curIndex,
+      curIndex: this.props.memory ? this.props.pageIndexOptionPos.curIndex : '',
       zhpxMap: {'zhpx': '综合排序', 'pfzg': '评分最高', 'psfzd': '配送费最低', 'qsjzd': '起送价最低', 'rjzd': '人均最低'},
       zhpxCurrnet: 'zhpx'
     }
+  }
+  initIndex(){
+    this.setState({curIndex: ''})
   }
   //区分不同类型选择
   switchTab = (index, option) =>{
@@ -40,27 +43,30 @@ class SearchOption extends Component {
         break;
     }
     if(index==1||index==2||(index===0&&option)||(index===0&&!this.state.fixedTop)){
-      this.props.actions.setPageIndexOptionPos({curIndex: index})
+      if(this.props.memory){
+        this.props.actions.setPageIndexOptionPos({curIndex: index})
+      }
       tools.scrollTo("blockShopTitle")
     }
   }
   test = () => {
-
+    //posId 从滚动到id为该变量的元素时开始置顶
     this.setState({fixedTopHeight: document.getElementById(this.props.posId).offsetTop})
     let prevValue = this.state.fixedTop
     if(window.scrollY < this.state.fixedTopHeight){
       this.setState({fixedTop: false})
+      $("#searchOptionMain").css("top", 0)
     }else{
       this.setState({fixedTop: true})
+      if(this.props.cssTop){
+        $("#searchOptionMain").css("top",this.props.cssTop)
+      }
     }
-    console.log(window.scrollY, this.state.fixedTopHeight)
+    //console.log(window.scrollY, this.state.fixedTopHeight)
     //经过指定位置时传递事件
     if(prevValue !== this.state.fixedTop){
       this.props.refreshSearchPosition(this.state.fixedTop)
       this.props.actions.setPageIndexOptionPos({num: this.state.fixedTopHeight, fixedTop: this.state.fixedTop})
-    }
-    if(this.props.posId == 'topDiv'){
-      $("#searchOptionMain").css("top","0")
     }
   }
   componentDidMount(){

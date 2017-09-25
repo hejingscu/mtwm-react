@@ -17,7 +17,7 @@ import { hashHistory } from 'react-router'
 class Index extends React.Component{
   constructor(props) {
         super(props)
-        this.state = {noMore: false,searchOptionTop: false, pageParams: {pageIndex: 1, pageSize: 10}}
+        this.state = {searchOptionTop: false, pageParams: {pageIndex: 1, pageSize: 10}}
   }
   refreshSearchPosition = (flg) => {
     this.setState({searchOptionTop: flg})
@@ -31,16 +31,30 @@ class Index extends React.Component{
   }
   //单独获取店铺列表
   getShop = (option) => {
+    let { pageParams } = this.state
+    pageParams.pageIndex = 1
+    this.setState({pageParams: pageParams})
+    this.props.actions.saveIsNoMore('pageIndex', false)
+    this.props.actions.getPageIndexData(this.state.pageParams, 'reloadShop')//获取数据
+  }
+  //获取更多店铺
+  getMoreShop = (option) => {
+    let { pageParams } = this.state
+    //加载中图标
+    this.props.actions.saveNextPageLoading(true)
     api.getShop(this.state.pageParams).then( (res) => {
-      //this.setState({shopList: res.data})
-      this.props.actions.updateIndexShopList(res.data)
-      if(res.data.length < this.state.pageParams.pageSize){
-        this.setState({noMore: true})
-      }
+      //加载中结束，图标消失
+      setTimeout(()=>{
+        this.props.actions.saveNextPageLoading(false)
+        this.props.actions.updateIndexShopList(res.data, option)
+        if(pageParams.pageIndex == res.data.totalPage){
+          this.props.actions.saveIsNoMore('pageIndex', true)
+        }
+      },500)
     })
   }
   toTypeShopList = (item) => {
-    hashHistory.push('/shop/list/' + item.name)
+    hashHistory.push({pathname: '/shop/list', state: {categoryId: item._id}})
   }
   componentWillMount(){
 
@@ -53,6 +67,7 @@ class Index extends React.Component{
 
     this.refreshSearchPosition(this.props.pageIndexOptionPos.fixedTop)//筛选条件判断是否置顶
     let getPageIndexData = await this.props.actions.getPageIndexData(this.state.pageParams)//获取数据
+
     $(window).scrollTop(this.props.routes[this.props.routes.length-1].scrollY)//滚动到上次浏览位置
     //this.refs['searchOption'].test()
     //构建轮播实例
@@ -65,14 +80,17 @@ class Index extends React.Component{
       observeParents:true//修改swiper的父元素时，自动初始化swiper
     });
     //是否滚动到底部
-    $(window).bind('scroll', function () {
-      let totalH = document.body.clientHeight, screenH = window.screen.height, currentH = window.scrollY
-      if(totalH - screenH - currentH < 1 && !that.state.noMore){
-        pageParams.pageIndex += 1
-        that.setState({pageParams: pageParams})
-        that.getShop()
-      }
-		});
+    setTimeout(()=>{
+      $(window).bind('scroll', function () {
+        let totalH = document.body.clientHeight, screenH = window.screen.height, currentH = window.scrollY
+        //console.log($(window).scrollTop(),$(window).height(),$("#shopList").height(),document.getElementById("shopList").offsetTop)
+        if(($(window).scrollTop() + $(window).height() + 10 > $("#shopList").height() + document.getElementById("shopList").offsetTop) && !that.props.noMoreFlgData.pageIndex && !that.props.nextPageLoading){
+          pageParams.pageIndex += 1
+          that.setState({pageParams: pageParams})
+          that.getMoreShop()
+        }
+      });
+    },2)
   }
   componentWillUnmount(){
     $(window).unbind("scroll")
@@ -81,8 +99,9 @@ class Index extends React.Component{
 
   }
   render () {
+
     let { shopList, bannerList, categoryList } = this.props.pageIndexData
-    let { noMore } = this.state
+    let  noMore  = this.props.noMoreFlgData.pageIndex
     return (
       <div style={{fontSize: '0.26rem'}} className="pageIndex">
         <TopSearch></TopSearch>
@@ -119,10 +138,10 @@ class Index extends React.Component{
         </div>
         <div id="blockShopTitle" className="text-center">附近商家</div>
         {/* <div id="searchOptionPosition" className={this.state.searchOptionTop ? 'blockShopFlgShow' : 'blockShopFlgHide'}></div> */}
-        <SearchOption ref="searchOption" getShop={this.getShop} refreshSearchPosition={this.refreshSearchPosition} posId={"blockShopTitle"}></SearchOption>
-        <ShopList shopList={shopList}></ShopList>
+        <SearchOption ref="searchOption" memory={true} getShop={this.getShop} refreshSearchPosition={this.refreshSearchPosition} posId={"blockShopTitle"} cssTop={'.84rem'}></SearchOption>
+        <ShopList shopList={shopList} nextPageLoading={this.props.nextPageLoading}></ShopList>
+        <Footbar/>
         {noMore ? <div className="no-more">没有更多了</div> : ''}
-        <Footbar></Footbar>
       </div>
     )
   }
