@@ -11,10 +11,11 @@ class SearchOption extends Component {
       shopDropdown: false,
       fixedTopHeight: 0,
       timer: '',
-      fixedTop: '',
+      fixedTop: false,
       curIndex: this.props.memory ? this.props.pageIndexOptionPos.curIndex : '',
       zhpxMap: {'zhpx': '综合排序', 'pfzg': '评分最高', 'psfzd': '配送费最低', 'qsjzd': '起送价最低', 'rjzd': '人均最低'},
-      zhpxCurrnet: 'zhpx'
+      zhpxCurrnet: 'zhpx',
+      showMask: false
     }
   }
   initIndex(){
@@ -25,11 +26,11 @@ class SearchOption extends Component {
     console.log(index, option)
     switch(index){
       case 1:
-        this.setState({shopDropdown: false, curIndex: index})
+        this.setState({shopDropdown: false, showMask: false, curIndex: index})
         this.props.getShop('xlzg');
         break;
       case 2:
-        this.setState({shopDropdown: false, curIndex: index})
+        this.setState({shopDropdown: false, showMask: false, curIndex: index})
         this.props.getShop('jlzj');
         break;
       case 0:
@@ -37,16 +38,27 @@ class SearchOption extends Component {
           this.setState({curIndex: index, zhpxCurrnet: option})
           this.props.getShop(option);
         }
-        this.setState({shopDropdown: !this.state.shopDropdown})
+        //滑动高度超过筛选元素时，点击综合排序但没点击具体排序方式时，不滚动，只是单纯控制下拉菜单的显隐
+        if(this.state.fixedTop){
+          this.setState({showMask: !this.state.showMask, shopDropdown: !this.state.shopDropdown})
+        }
+        break
+      case -1:
+        this.setState({shopDropdown: false,showMask: false})
         break
       default:
         break;
     }
-    if(index==1||index==2||(index===0&&option)||(index===0&&!this.state.fixedTop)){
+    if(index==1||index==2||option||(index===0&&!this.state.fixedTop)){
       if(this.props.memory){
         this.props.actions.setPageIndexOptionPos({curIndex: index})
       }
-      tools.scrollTo("blockShopTitle")
+      tools.scrollTo("blockShopTitle",()=>{
+        //如果点击的是tab0下的子元素，则在滚动到筛选元素位置之后才对下拉选项进行显示
+        if(index===0&&!this.state.fixedTop){
+          this.setState({showMask: true, shopDropdown: true})
+        }
+      })
     }
   }
   test = () => {
@@ -79,7 +91,7 @@ class SearchOption extends Component {
     let { zhpxMap,zhpxCurrnet } = this.state
     return (
       <section style={{position: 'relative'}} id="searchOption">
-        {this.state.fixedTop ? <div style={{height: '.7rem'}}></div> : ''}
+        {this.state.fixedTop ? <div style={{height: '.9rem'}}></div> : ''}
         <div className={this.state.fixedTop ? "fixedTop" : "notFixedTop"} id="searchOptionMain">
           <div className="block-option">
             <dic className={"item-option " + (this.state.curIndex === 0 ? "active" : "")} onClick={() => {this.switchTab(0)}}>{zhpxMap[zhpxCurrnet]}</dic>
@@ -88,8 +100,8 @@ class SearchOption extends Component {
             <dic className={"item-option " + (this.state.curIndex === 3 ? "active" : "")}className="item-option">筛选</dic>
           </div>
           {
-            this.state.shopDropdown ?
-            <div className="block-zh-rank text-left">
+            this.state.shopDropdown && this.state.showMask ?
+            <div className="block-zh-rank text-left" style={{borderTop: '1px solid #eee'}}>
               <div className="item-rank" onClick={() => {this.switchTab(0,'zhpx')}}>{zhpxMap['zhpx']}</div>
               <div className="item-rank" onClick={() => {this.switchTab(0,'pfzg')}}>{zhpxMap['pfzg']}</div>
               <div className="item-rank" onClick={() => {this.switchTab(0,'psfzd')}}>{zhpxMap['psfzd']}</div>
@@ -99,8 +111,8 @@ class SearchOption extends Component {
           }
         </div>
         {
-          this.state.shopDropdown ?
-          <div onTouchStart={(e) => {e.preventDefault();this.switchTab(0)}} style={{height: '100vh',position: 'fixed',top: '0',bottom: '.8rem',background: '#000',zIndex: '99',opacity: '.8',width: '100%'}}></div>
+          this.state.shopDropdown && this.state.showMask ?
+          <div onTouchStart={(e) => {e.preventDefault();this.switchTab(-1)}} style={{height: '100vh',position: 'fixed',top: '0',bottom: '.8rem',background: '#000',zIndex: '99',opacity: '.8',width: '100%'}}></div>
           : ''
         }
 

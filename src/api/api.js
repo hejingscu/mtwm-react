@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { hashHistory } from 'react-router'
+import { Toast } from 'antd-mobile'
 
 const baseUrl = '/mtwm-api/'
     //'http://10.200.4.140:3000/mtwm/'//开发环境
@@ -55,17 +56,17 @@ axios.interceptors.response.use(function(res) {
                 hashHistory.push('/login')
                 break;
             case 404:
-                alert("404")
+                Toast.info(error.response.status)
                 break;
             case 502:
-                alert("401")
+                Toast.info(error.response.status)
                 break;
             case 504:
-                alert("401")
+                console.log(error.response.status)
                 break;
             default:
-                alert("401")
+                Toast.info(error.response.status)
         }
     }
-    return error;
+    return Promise.reject(error);
 })

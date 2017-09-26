@@ -14,7 +14,7 @@ body {
     margin: 0px;
     padding: 0px;
     width: 100%;
-    height: 100%;
+    height: auto;
     font-family: "Microsoft YaHei", Helvetica, STHeiti, Droid Sans Fallback;
     img {}
 }
@@ -382,11 +382,11 @@ input[type="number"] {
     background: #eee;
     opacity: .9;
     bottom: 0;
-    z-index: 1000;
+    z-index: 10;
     .item {
         flex: 1;
         text-align: center;
-        line-height: .8rem;
+        line-height: 1rem;
         margin: 0 8%;
         color: #111;
     }
@@ -517,8 +517,8 @@ input[type="number"] {
         .item-option {
             flex: 1;
             text-align: center;
-            height: .7rem;
-            line-height: .7rem;
+            height: .8rem;
+            line-height: .8rem;
         }
     }
     //元素置顶
@@ -538,11 +538,11 @@ input[type="number"] {
         background: #fff;
         position: absolute;
         width: 100%;
-        top: .61rem;
+        top: .81rem;
         z-index: 101;
         .item-rank {
-            height: .7rem;
-            line-height: .7rem;
+            height: .8rem;
+            line-height: .8rem;
             padding: 0 6%;
             border-bottom: 1px solid #eee;
         }
@@ -554,13 +554,13 @@ input[type="number"] {
     position: absolute;
     width: 100%;
     z-index: 200;
-    height: .7rem;
+    height: 1rem;
     display: flex;
     flex-flow: row wrap;
     .item {
         float: left;
         padding: .1rem 3%;
-        height: .84rem;
+        height: .9rem;
         line-height: .5rem;
         &>div {
             border-radius: .3rem;
@@ -577,7 +577,7 @@ input[type="number"] {
         opacity: .5;
         color: #fff;
         height: 100%;
-        line-height: .64rem;
+        line-height: .74rem;
     }
     .search {
         width: 60%;
@@ -599,7 +599,7 @@ input[type="number"] {
         color: #888;
         padding-left: 6%;
         height: 100%;
-        line-height: .64rem;
+        line-height: .74rem;
         a {
             display: inline-block;
             width: 100%;
@@ -614,7 +614,7 @@ input[type="number"] {
 //首页
 .pageIndex {
     background: #f4f4f4;
-    margin-bottom: .8rem;
+    margin-bottom: 1rem;
     position: relative;
     .blockShopFlgHide {
         height: .01rem;

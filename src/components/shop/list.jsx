@@ -22,8 +22,8 @@ class PageShopList extends React.Component{
     let { pageParams } = this.state
     pageParams.pageIndex = 1
     this.setState({pageParams: pageParams})
+    this.props.actions.saveIsNoMore('pageIndex', false)//重置变量
     this.props.actions.getTypeShopListData(this.state.pageParams, 'reloadShop')//获取数据
-    this.props.actions.saveIsNoMore('pageTypeShop', false)
   }
   //加载更多
   getMoreShop = () => {
@@ -32,19 +32,14 @@ class PageShopList extends React.Component{
     this.props.actions.saveNextPageLoading(true)
     api.getShop(pageParams).then( (res) => {
       //this.setState({shopList: res.data})
-      //加载中结束，图标消失
       setTimeout(()=>{
-        this.props.actions.saveNextPageLoading(false)
-        this.props.actions.updateTypeShopList(res.data)
-        //this.props.actions.getTypeShopListData(this.state.pageParams)
+        this.props.actions.saveNextPageLoading(false)//加载中结束，图标消失
+        this.props.actions.updateTypeShopList(res.data)//将拿到的数据塞入到数组列表中
         if(pageParams.pageIndex == res.data.totalPage){
           this.props.actions.saveIsNoMore('pageTypeShop', true)
         }
       },500)
     })
-  }
-  componentWillMount(){
-
   }
   async componentDidMount(){
     let { pageParams } = this.state

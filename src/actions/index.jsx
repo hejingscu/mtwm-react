@@ -34,7 +34,6 @@ export const getTypeShopListData = (shopParam, flg) => {
     if(getState().typeShopListData.shopList.length < 1 || flg == 'reloadShop'){
       let shop = await api.getShop(shopParam)
       dispatch({type: "getTypeShopListData", data: {shopList: shop.data.infos}});
-      console.log(shopParam)
       if(shopParam.pageIndex === shop.data.totalPage){
 
         dispatch({type: "saveIsNoMore", data: {pageTypeShop: true}});

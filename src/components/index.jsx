@@ -17,41 +17,44 @@ import { hashHistory } from 'react-router'
 class Index extends React.Component{
   constructor(props) {
         super(props)
-        this.state = {searchOptionTop: false, pageParams: {pageIndex: 1, pageSize: 10}}
+        this.state = {searchOptionTop: false, pageParams: {pageIndex: 1, pageSize: 10}, refreshFlg: false}
   }
   refreshSearchPosition = (flg) => {
     this.setState({searchOptionTop: flg})
   }
-  //获取主页所有数据
-  async getData(){
-    let shop = await api.getShop()
-    let banner = await api.getBanner()
-    let category = await api.getCategory()
-    this.setState({shopList: shop.data, bannerList: banner.data, categoryList: category.data})
-  }
-  //单独获取店铺列表
+  //单独获取店铺列表（例如选择排序方式时，重新拉取店铺数据）
   getShop = (option) => {
     let { pageParams } = this.state
     pageParams.pageIndex = 1
     this.setState({pageParams: pageParams})
-    this.props.actions.saveIsNoMore('pageIndex', false)
+    this.props.actions.saveIsNoMore('pageIndex', false)//重置变量
     this.props.actions.getPageIndexData(this.state.pageParams, 'reloadShop')//获取数据
   }
-  //获取更多店铺
-  getMoreShop = (option) => {
+  //下滑加载更多店铺
+  getMoreShop(option){
     let { pageParams } = this.state
     //加载中图标
+    this.setState({refreshFlg: false})
     this.props.actions.saveNextPageLoading(true)
     api.getShop(this.state.pageParams).then( (res) => {
       //加载中结束，图标消失
       setTimeout(()=>{
-        this.props.actions.saveNextPageLoading(false)
-        this.props.actions.updateIndexShopList(res.data, option)
+        this.props.actions.saveNextPageLoading(false)//加载中结束，图标消失
+        this.props.actions.updateIndexShopList(res.data, option)//将拿到的数据塞入到数组列表中
         if(pageParams.pageIndex == res.data.totalPage){
           this.props.actions.saveIsNoMore('pageIndex', true)
         }
       },500)
+    }).catch(()=>{
+      this.props.actions.saveNextPageLoading(false)//加载中结束，图标消失
+      this.setState({refreshFlg: true})
+      this.props.actions.saveIsNoMore('pageIndex', true)//不允许再往下滑了
     })
+  }
+  //重新加载下一页
+  refreshMorePage(){
+    this.props.actions.saveIsNoMore('pageIndex', false)
+    this.getMoreShop()
   }
   toTypeShopList = (item) => {
     hashHistory.push({pathname: '/shop/list', state: {categoryId: item._id}})
@@ -102,6 +105,7 @@ class Index extends React.Component{
 
     let { shopList, bannerList, categoryList } = this.props.pageIndexData
     let  noMore  = this.props.noMoreFlgData.pageIndex
+    let { refreshFlg } = this.state
     return (
       <div style={{fontSize: '0.26rem'}} className="pageIndex">
         <TopSearch></TopSearch>
@@ -138,10 +142,11 @@ class Index extends React.Component{
         </div>
         <div id="blockShopTitle" className="text-center">附近商家</div>
         {/* <div id="searchOptionPosition" className={this.state.searchOptionTop ? 'blockShopFlgShow' : 'blockShopFlgHide'}></div> */}
-        <SearchOption ref="searchOption" memory={true} getShop={this.getShop} refreshSearchPosition={this.refreshSearchPosition} posId={"blockShopTitle"} cssTop={'.84rem'}></SearchOption>
+        <SearchOption ref="searchOption" memory={true} getShop={this.getShop} refreshSearchPosition={this.refreshSearchPosition} posId={"blockShopTitle"} cssTop={'.9rem'}></SearchOption>
         <ShopList shopList={shopList} nextPageLoading={this.props.nextPageLoading}></ShopList>
         <Footbar/>
-        {noMore ? <div className="no-more">没有更多了</div> : ''}
+        {noMore && !refreshFlg ? <div className="no-more">没有更多了</div> : ''}
+        {refreshFlg ? <div className="no-more"><span onClick={()=>{this.refreshMorePage()}}>点击重新加载</span></div> : ''}
       </div>
     )
   }

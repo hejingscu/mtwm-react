@@ -1,6 +1,6 @@
 let tools = {};
 
-tools.scrollTo = (elementId) => {
+tools.scrollTo = (elementId, fn) => {
   {
     function getScrollOffsets(_w) {//获取页面的滚动位置
         _w = _w || window;
@@ -83,12 +83,14 @@ tools.scrollTo = (elementId) => {
             //到达指定位置后清除一下Interval
             if ( Math.abs(getScrollOffsets().y - targetY) <= 2 && Math.abs(getScrollOffsets().x - targetX) <= 2  ) {
                 clearInterval(tempTimer);
+                fn && fn()
                 window.scrollTo(targetX, targetY);
                 //console.log("done");
             }
         }, 10);
     }
     scrollPosition(elementId);
+
     //window.scrollTo(0,position)
   }
 }
