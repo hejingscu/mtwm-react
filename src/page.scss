@@ -1,0 +1,180 @@
+//首页
+.pageIndex {
+    background: #f4f4f4;
+    margin-bottom: 1rem;
+    position: relative;
+    .blockShopFlgHide {
+        height: .01rem;
+    }
+    .blockShopFlgShow {
+        background: #fff;
+        height: 1.54rem;
+    }
+    #blockShopTitle {
+        background: #fff;
+        line-height: .8rem;
+    }
+}
+
+//搜索页
+.page-search {
+    .topper {
+        height: .8rem;
+        display: flex;
+        position: relative;
+        z-index: 100;
+        .search-btn {
+            width: 14%;
+            height: .8rem;
+            line-height: .8rem;
+            text-align: center;
+            color: #ffd161;
+            font-size: .28rem;
+        }
+    }
+}
+
+//店铺页
+.page-shop-detail {
+    .shop-info {
+        height: 2rem;
+        padding: .4rem 5%;
+        background: #000;
+        opacity: .7;
+        color: #fff;
+        overflow: hidden;
+        .shop-icon {
+            width: 1rem;
+            height: 1rem;
+            border: 1px solid #fff;
+            float: left;
+            margin-right: .4rem;
+        }
+        .text-info {
+            float: left;
+            p {
+                line-height: .5rem;
+            }
+        }
+    }
+    .page-tab {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+        flex-flow: row wrap;
+    }
+    .scroll-tab {
+        background: #f4f4f4;
+        min-height: 80vh;
+        width: 20%;
+        .item-tab {
+            line-height: 1rem;
+            height: 1rem;
+        }
+        .active {
+            background: #fff;
+        }
+    }
+    .goods-container {
+        width: 80%;
+        background: #fff;
+        .item-goods {
+            position: relative;
+            height: 1.5rem;
+            overflow: hidden;
+            .item-num {
+                position: absolute;
+                bottom: 20%;
+                right: 10%;
+            }
+            .img-goods {
+                width: 70%;
+            }
+            .goods-info {
+                padding-left: .1rem;
+            }
+            .item-price {
+                position: absolute;
+                bottom: 20%;
+                left: 32%;
+            }
+        }
+    }
+    .cart {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        .item-icon {
+            position: absolute;
+            bottom: .2rem;
+            left: 5%;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 100%;
+            background: #999;
+            span {
+                display: inline-block;
+                width: 100%;
+                height: 100%;
+            }
+            .item-icon-empty {
+                background: url('src/img/cart-empty.png') no-repeat 45%;
+                background-size: 60%;
+            }
+            .item-icon-notEmpty {
+                background: url('src/img/cart.png') no-repeat 45%;
+                background-size: 60%;
+            }
+        }
+        .empty {
+            background: #999;
+        }
+        .notEmpty {
+            background: #f5da55;
+        }
+        .cart-base {
+            height: 1rem;
+            background: #444;
+            .total-price {
+                float: left;
+                color: #fff;
+                line-height: 1rem;
+                font-size: .4rem;
+                margin-left: 20%;
+            }
+            .to-pay {
+                float: right;
+                width: 24%;
+                text-align: center;
+                line-height: 1rem;
+            }
+            .to-pay-empty {
+                background: #333;
+                color: #999;
+            }
+            .to-pay-notEmpty {
+                background: #f5da55;
+                color: #333;
+            }
+        }
+        .cart-main {
+            background: #fff;
+            padding: .2rem .5rem;
+            .cart-item-goods {
+                line-height: .5rem;
+            }
+        }
+    }
+}
+
+//订单主页面
+.page-order {
+    .item-order {
+        border: 1px solid #eee;
+        margin-bottom: .2rem;
+    }
+}

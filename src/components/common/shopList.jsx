@@ -14,7 +14,7 @@ class ShopList extends Component {
             return (
               <Link to={'/shop/detail/' + item._id} key={key} className="item-shop">
                   <div className="item-inner">
-                    <div className="img"><img src={item.icon} alt=""/></div>
+                    <div className="img"><img src={item.icon + "?imageView2/2/w/220"} alt=""/></div>
                     <div className="content">
                       <div className="shop-name">{item.name}</div>
                       <div className="shop-price">起送价￥{item.priceStart}|配送￥{item.psPrice}|人均￥{item.personPrice}</div>

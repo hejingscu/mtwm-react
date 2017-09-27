@@ -17,10 +17,13 @@ import { hashHistory } from 'react-router'
 class Index extends React.Component{
   constructor(props) {
         super(props)
-        this.state = {searchOptionTop: false, pageParams: {pageIndex: 1, pageSize: 10}, refreshFlg: false}
+        this.state = {searchOptionTop: false,topSearchTop: false, pageParams: {pageIndex: 1, pageSize: 10}, refreshFlg: false}
   }
-  refreshSearchPosition = (flg) => {
+  refreshSearchPosition(flg){
     this.setState({searchOptionTop: flg})
+  }
+  refreshTopPosition(flg){
+    this.setState({topSearchTop: flg})
   }
   //单独获取店铺列表（例如选择排序方式时，重新拉取店铺数据）
   getShop = (option) => {
@@ -69,6 +72,7 @@ class Index extends React.Component{
         that = this
 
     this.refreshSearchPosition(this.props.pageIndexOptionPos.fixedTop)//筛选条件判断是否置顶
+    this.refreshTopPosition(this.props.pageIndexOptionPos.topFixedTop)//顶部搜索框判断是否置顶
     let getPageIndexData = await this.props.actions.getPageIndexData(this.state.pageParams)//获取数据
 
     $(window).scrollTop(this.props.routes[this.props.routes.length-1].scrollY)//滚动到上次浏览位置
@@ -118,7 +122,7 @@ class Index extends React.Component{
               bannerList.map((item,key) => {
                 return (
                   <div key={key} className="swiper-slide">
-                    <img src={item.img} alt="" height="100%"/>
+                    <img src={item.img + "?imageView2/2/w/640"} alt="" height="100%"/>
                   </div>
                 )
               })
@@ -132,7 +136,7 @@ class Index extends React.Component{
               return (
                 <div key={key} className="item-category" onClick={() => {this.toTypeShopList(item)}}>
                   <div className="item-inner">
-                    <img src={item.icon} alt="" height="100%"/>
+                    <img src={item.icon + "?imageView2/2/w/200"} alt="" height="100%"/>
                     <div>{item.name}</div>
                   </div>
                 </div>
@@ -142,7 +146,7 @@ class Index extends React.Component{
         </div>
         <div id="blockShopTitle" className="text-center">附近商家</div>
         {/* <div id="searchOptionPosition" className={this.state.searchOptionTop ? 'blockShopFlgShow' : 'blockShopFlgHide'}></div> */}
-        <SearchOption ref="searchOption" memory={true} getShop={this.getShop} refreshSearchPosition={this.refreshSearchPosition} posId={"blockShopTitle"} cssTop={'.9rem'}></SearchOption>
+        <SearchOption ref="searchOption" memory={true} getShop={this.getShop} refreshSearchPosition={()=>{this.refreshSearchPosition}} posId={"blockShopTitle"} cssTop={'.9rem'}></SearchOption>
         <ShopList shopList={shopList} nextPageLoading={this.props.nextPageLoading}></ShopList>
         <Footbar/>
         {noMore && !refreshFlg ? <div className="no-more">没有更多了</div> : ''}

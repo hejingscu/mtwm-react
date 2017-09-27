@@ -7,34 +7,31 @@ const baseUrl = '/mtwm-api/'
     //'/'//生产环境
 
 /*注册*/
-export const register = params => axios.post(baseUrl + 'user/register', params);
+export const register = params => axios.post(`${baseUrl}user/register`, params);
 
 /*登录*/
-export const login = params => axios.post(baseUrl + 'user/login', params);
-
-/*七牛*/
-export const getQiniuToken = params => axios.get('/house/qiniu/test');
+export const login = params => axios.post(`${baseUrl}user/login`, params);
 
 /*店铺列表*/
-export const getShop = params => axios.get(baseUrl + 'shop', { params: params });
+export const getShop = params => axios.get(`${baseUrl}shop`, { params: params });
 
 /*获取banner*/
-export const getBanner = params => axios.get(baseUrl + 'banner', params);
+export const getBanner = params => axios.get(`${baseUrl}banner`, params);
 
 /*获取主页类目*/
-export const getCategory = params => axios.get(baseUrl + 'category', params);
+export const getCategory = params => axios.get(`${baseUrl}category`, params);
 
 //获取店铺信息
-export const getShopInfo = params => axios.get(baseUrl + 'shop/manage/' + params.id);
+export const getShopInfo = params => axios.get(`${baseUrl}shop/manage/` + params.id);
 
 //下单
-export const newOrder = params => axios.post(baseUrl + 'order', params);
+export const newOrder = params => axios.post(`${baseUrl}order`, params);
 
 //获取我的订单
-export const getOrder = () => axios.get(baseUrl + 'order');
+export const getOrder = () => axios.get(`${baseUrl}order`);
 
 //获取用户基本信息
-export const getUserProfile = () => axios.get(baseUrl + 'user/profile');
+export const getUserProfile = () => axios.get(`${baseUrl}user/profile`);
 
 //添加一个请求拦截器
 axios.interceptors.request.use(function(config) {

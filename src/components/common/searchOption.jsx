@@ -18,12 +18,8 @@ class SearchOption extends Component {
       showMask: false
     }
   }
-  initIndex(){
-    this.setState({curIndex: ''})
-  }
   //区分不同类型选择
   switchTab = (index, option) =>{
-    console.log(index, option)
     switch(index){
       case 1:
         this.setState({shopDropdown: false, showMask: false, curIndex: index})
@@ -56,7 +52,7 @@ class SearchOption extends Component {
       tools.scrollTo("blockShopTitle",()=>{
         //如果点击的是tab0下的子元素，则在滚动到筛选元素位置之后才对下拉选项进行显示
         if(index===0&&!this.state.fixedTop){
-          this.setState({showMask: true, shopDropdown: true})
+          this.setState({showMask: !this.state.showMask, shopDropdown: !this.state.shopDropdown})
         }
       })
     }
@@ -78,11 +74,13 @@ class SearchOption extends Component {
     //经过指定位置时传递事件
     if(prevValue !== this.state.fixedTop){
       this.props.refreshSearchPosition(this.state.fixedTop)
-      this.props.actions.setPageIndexOptionPos({num: this.state.fixedTopHeight, fixedTop: this.state.fixedTop})
+      this.props.actions.setPageIndexOptionPos({fixedTop: this.state.fixedTop})
     }
   }
   componentDidMount(){
-    window.addEventListener('scroll', this.test);
+    if(this.props.posId){
+      window.addEventListener('scroll', this.test);
+    }
   }
   componentWillUnmount(){
     window.removeEventListener('scroll', this.test);
