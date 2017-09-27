@@ -1,6 +1,6 @@
 ### 命令
 ```bash
-npm run build                 # 开发模式
+npm run dev                 # 开发模式
 npm run build                 # 打包
 ```
 
