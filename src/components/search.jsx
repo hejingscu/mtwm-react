@@ -13,12 +13,20 @@ export default class PageSearch extends Component{
           list: ["黄焖鸡","麻辣烫","鸡排","沙拉","寿司","小炒肉","粉丝汤","排骨饭"],
           shopList: [],
           searchText: '',
-          pageOption:{pageIndex: 1,pageSize: 10}
+          pageOption:{pageIndex: 1,pageSize: 100},
+          searchOption: ''
         }
     }
     //查询店铺
-    getShop(item){
-      api.getShop($.extend({name: item},this.state.pageOption)).then(res=>{
+    //@type( true： 通过点击筛选条件调用 ; 不传： 通过点击搜索按钮或tagItem调用 )
+    getShop(item, type){
+      let that = this
+      let searchOption = $.extend(that.state.pageOption, {name: this.state.searchText})
+      if(type){
+        this.setState({searchOption: item})
+        searchOption.rank = item
+      }
+      api.getShop(searchOption).then(res=>{
         this.setState({shopList: res.data.infos})
       })
     }
@@ -54,8 +62,8 @@ export default class PageSearch extends Component{
           {
             this.state.searched ?
               <div>
-                <SearchOption getShop={this.getShop}/>
-                <ShopList shopList={shopList} nextPageLoading={this.props.nextPageLoading}></ShopList>
+                <SearchOption getShop={(item)=>{this.getShop(item, true)}}/>
+                <ShopList shopList={shopList}></ShopList>
               </div>
               :<div>
                 <SearchTagList list={list} title={"热门搜索"} clickTag={(item)=>{this.clickTag(item)}}/>

@@ -20,6 +20,7 @@ class SearchOption extends Component {
   }
   //区分不同类型选择
   switchTab = (index, option) =>{
+    console.log(this.state.fixedTop,this.state.showMask,this.state.shopDropdown)
     switch(index){
       case 1:
         this.setState({shopDropdown: false, showMask: false, curIndex: index})

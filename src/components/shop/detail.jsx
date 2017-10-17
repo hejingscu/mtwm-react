@@ -10,21 +10,37 @@ import { hashHistory } from 'react-router'
 class ShopDetail extends React.Component{
   constructor(props) {
         super(props)
-        this.state = {mainData: {},tabIndex: 0, showCart: false, curShopGoods: {discount: '', goods: []}, shopCartData: {list:[]}}
+        this.state =
+        {mainData: {},
+        tabIndex: 0,
+        showCart: false,
+        curShopGoods: {discount: '', goods: []},
+        shopCartData: {list:[],totalAmount:0}
+      }
     }
     changeTab(i){
       this.setState({tabIndex: i})
     }
-    componentDidMount(){
-      this.getData()
+    async componentDidMount(){
+      let res0 = await this.getShopcartData()
+      //let res1 = await this.getData()
+    }
+    getShopcartData(){
+      api.getShopcartData().then(res=>{
+        let shopCartData = {list: JSON.parse(res.data.info)[this.props.params.id] || [], totalAmount: 0}
+        console.log(JSON.parse(res.data.info)[this.props.params.id])
+        this.setState({shopCartData})
+        console.log(this.state.shopCartData)
+        this.getData()
+      })
     }
     //获取商品数据和购物车数据
     getData(){
-      //第一次存入localstorage
-      if(!window.localStorage.getItem('shopCart')){window.localStorage.setItem('shopCart', '{}')}
-      //从localStorage拉取当前店铺的购物车数据
-      let shopCartData = JSON.parse(window.localStorage.getItem('shopCart'))[this.props.params.id] || [], totalAmount = 0
-      shopCartData && shopCartData.forEach(item=>{
+      //购物车数据
+      let { shopCartData } = this.state
+      console.log(shopCartData)
+      let totalAmount = 0
+      shopCartData.list && shopCartData.list.forEach(item=>{
         totalAmount += ( item.price * item.count )
       })
       //获取店铺的最新商品数据
@@ -33,16 +49,16 @@ class ShopDetail extends React.Component{
           item.count = 0
         })
         //console.log(shopCartData)
-        res.data.goods = res.data.goods.concat(shopCartData).uniqueGoods('goodsId')
+        res.data.goods = res.data.goods.concat(shopCartData.list).uniqueGoods('goodsId')
         this.setState({curShopGoods: res.data});
       })
-      this.setState({shopCartData: {list: shopCartData, totalAmount: totalAmount}});
+      this.setState({shopCartData: {list: shopCartData.list, totalAmount: totalAmount}});
+
     }
     //加减商品
     changeGoodsNum(goodsObj,type){
-      let totalBuyCart = JSON.parse(window.localStorage.getItem('shopCart'))//所有店铺的购物车数据
-      let shopId = this.props.params.id
-      let shopCartData = { list: totalBuyCart[shopId] || [], totalAmount : 0}//当前店铺的购物车初始化数据
+      let { shopCartData } = this.state//当前店铺的购物车初始化数据
+      shopCartData.totalAmount = 0//计算总价时先清零
       this.state.curShopGoods.goods.forEach(item=>{
         if(item.goodsId == goodsObj.goodsId){
           let cartObj,cartObjIndex //购物车中正在操作的商品的对象
@@ -53,11 +69,11 @@ class ShopDetail extends React.Component{
               cartObjIndex = index
             }
           })
+
           //添加操作
           if(type == 'add'){
             if(item.count>0){
               item.count += 1
-              cartObj.count += 1//已经点过的商品，执行数量增加即可
             }else{
               item.count = 1
               shopCartData.list.push(item)//新添加的商品，将其添加到购物车中
@@ -66,17 +82,18 @@ class ShopDetail extends React.Component{
           //减操作
           else{
             item.count -= 1
-            cartObj.count -= 1
-            //当数量为0时从购物车中删除
+            console.log(shopCartData.list)
             if(cartObj.count===0){shopCartData.list.splice(cartObjIndex, 1)}
           }
         }
         //计算总价
         shopCartData.totalAmount += ( item.count * item.price)
       })
-      //将变化的数据存入localStorage
-      totalBuyCart[shopId] = shopCartData.list
-      window.localStorage.setItem('shopCart', JSON.stringify(totalBuyCart))
+      //将购物车数据实时更新至服务端
+      shopCartData.shopid = this.props.params.id
+      api.updateShopcart(shopCartData).then(res=>{
+
+      })
       this.setState({shopCartData: shopCartData});
     }
     //显示隐藏购物车
@@ -89,7 +106,7 @@ class ShopDetail extends React.Component{
     submitOrder(){
       let { shopCartData } = this.state
       //shopCartData.list = JSON.stringify(shopCartData.list)
-      console.log(shopCartData)
+      shopCartData.shopId = this.props.params.id//店铺id
       api.newOrder(shopCartData).then(res=>{
 
       })

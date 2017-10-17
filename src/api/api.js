@@ -24,6 +24,12 @@ export const getCategory = params => axios.get(`${baseUrl}category`, params);
 //获取店铺信息
 export const getShopInfo = params => axios.get(`${baseUrl}shop/manage/` + params.id);
 
+//获取用户购物车信息
+export const getShopcartData = () => axios.get(`${baseUrl}shop/cart`);
+
+//更新用户购物车信息
+export const updateShopcart = params => axios.put(`${baseUrl}shop/cart/update`, params);
+
 //下单
 export const newOrder = params => axios.post(`${baseUrl}order`, params);
 

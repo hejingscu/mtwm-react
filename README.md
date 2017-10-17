@@ -1,7 +1,7 @@
 ### 命令
 ```bash
 npm run dev                 # 开发模式
-npm run build                 # 打包
+npm run build               # 打包编译
 ```
 
 ### 待解决问题
